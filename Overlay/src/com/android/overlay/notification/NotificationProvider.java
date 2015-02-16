@@ -2,6 +2,7 @@ package com.android.overlay.notification;
 
 import java.util.Collection;
 
+import android.content.Intent;
 import android.net.Uri;
 
 public interface NotificationProvider<T extends NotificationItem> {
@@ -9,31 +10,36 @@ public interface NotificationProvider<T extends NotificationItem> {
 	/**
 	 * List of notifications.
 	 */
-	Collection<T> getNotifications();
+	public Collection<T> getNotifications();
 
 	/**
 	 * Whether notification can be cleared.
 	 */
-	boolean canClearNotifications();
+	public boolean canClearNotifications();
 
 	/**
 	 * Clear notifications.
 	 */
-	void clearNotifications();
+	public void clearNotifications();
 
 	/**
 	 * Sound for notification.
 	 */
-	Uri getSound();
+	public Uri getSound();
 
 	/**
 	 * Audio stream type for notification.
 	 */
-	int getStreamType();
+	public int getStreamType();
 
 	/**
 	 * Resource id for notification.
 	 */
-	int getIcon();
+	public int getIcon();
+
+	/**
+	 * Intent for notification (If NotificationItem getIntent() == null).
+	 */
+	public Intent getIntent(NotificationItem item);
 
 }

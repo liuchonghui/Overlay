@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -15,10 +14,6 @@ import org.apache.http.HttpEntity;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
-
-import android.util.Log;
-
-import com.android.overlay.manager.LogManager;
 
 /**
  * <p>
@@ -206,20 +201,11 @@ public class AjaxParams {
 
 	protected List<BasicNameValuePair> getParamsList() {
 		List<BasicNameValuePair> lparams = new LinkedList<BasicNameValuePair>();
-		StringBuilder sign = new StringBuilder();
+
 		for (ConcurrentHashMap.Entry<String, String> entry : urlParams
 				.entrySet()) {
-			if (!entry.getKey().equalsIgnoreCase("action")) {
-				sign.append(entry.getValue());
-			}
-			
 			lparams.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
 		}
-		sign.append("ff1a5dccc71e454be4aff5bdddc639fd");
-		if (LogManager.isDebugable()) {
-			Log.d("MD5", sign.toString());
-		}
-		lparams.add(new BasicNameValuePair("sign", genMD5(sign.toString())));
 
 		return lparams;
 	}
@@ -247,32 +233,5 @@ public class AjaxParams {
 				return "nofilename";
 			}
 		}
-	}
-
-	private static String genMD5(String input) {
-		if (input == null || input.length() == 0) {
-			return input;
-		}
-		String result = null;
-		try {
-			MessageDigest md = MessageDigest.getInstance("md5");
-			byte b[] = md.digest(input.getBytes());
-			int i;
-			StringBuffer buf = new StringBuffer("");
-			for (int offset = 0; offset < b.length; offset++) {
-				i = b[offset];
-				if (i < 0)
-					i += 256;
-				if (i < 16)
-					buf.append("0");
-				buf.append(Integer.toHexString(i));
-			}
-			result = buf.toString();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return result;
 	}
 }

@@ -11,16 +11,16 @@ public interface NotificationItem {
 	/**
 	 * Title for notification.
 	 */
-	String getTitle();
+	public String getTitle();
 
 	/**
 	 * Show Text for notification.
 	 */
-	String getText();
+	public String getText();
 
 	/**
 	 * Intent to launch activity.
 	 */
-	Intent getIntent();
+	public Intent getIntent();
 
 }

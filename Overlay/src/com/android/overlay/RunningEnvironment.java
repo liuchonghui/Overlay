@@ -17,6 +17,11 @@ public class RunningEnvironment extends Environment {
 		}
 		return instance;
 	}
+	
+	public RunningEnvironment() {
+		super();
+		instance = this;
+	}
 
 	public RunningEnvironment(String managersRes, String tablesRes) {
 		super(managersRes, tablesRes);

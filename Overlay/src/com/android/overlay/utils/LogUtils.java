@@ -27,6 +27,26 @@ import com.android.overlay.manager.LogManager;
 public class LogUtils {
 
 	private static Logger logger;
+	
+	public static int d(Object obj, String msg) {
+		return LogManager.d(obj, msg);
+	}
+
+	public static int e(Object obj, String msg) {
+		return LogManager.e(obj, msg);
+	}
+
+	public static int i(Object obj, String msg) {
+		return LogManager.i(obj, msg);
+	}
+
+	public static int w(Object obj, String msg) {
+		return LogManager.w(obj, msg);
+	}
+
+	public static int v(Object obj, String msg) {
+		return LogManager.v(obj, msg);
+	}
 
 	public static boolean logToFile(String filePath, String msg) {
 		if (logger == null) {

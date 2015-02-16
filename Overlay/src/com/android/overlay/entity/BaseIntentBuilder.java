@@ -18,7 +18,7 @@ public class BaseIntentBuilder<T extends BaseIntentBuilder<?>> {
 	}
 
 	public Intent build() {
-		if (context != null || comp != null) {
+		if (context != null && comp != null) {
 			return IntentUtil.createActivityInitValue(context, comp);
 		} else {
 			return new Intent();

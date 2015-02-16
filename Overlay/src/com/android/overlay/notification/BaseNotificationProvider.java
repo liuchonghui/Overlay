@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
+import android.content.Intent;
 import android.media.AudioManager;
 import android.net.Uri;
 
@@ -77,6 +78,11 @@ public class BaseNotificationProvider<T extends NotificationItem> implements
 	@Override
 	public int getIcon() {
 		return icon;
+	}
+
+	@Override
+	public Intent getIntent(NotificationItem item) {
+		return null;
 	}
 
 }

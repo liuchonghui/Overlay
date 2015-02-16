@@ -20,7 +20,7 @@ import com.android.overlay.OnLoadListener;
 import com.android.overlay.RunningEnvironment;
 import com.android.overlay.notification.NotificationItem;
 import com.android.overlay.notification.NotificationProvider;
-import com.android.overlay.table.NotificationTable;
+import com.android.overlay.notification.OnClearNotificationsListener;
 
 /**
  * Manage notifications about message, authentication and subscription.
@@ -38,7 +38,7 @@ public class NotificationManager implements OnInitializedListener,
 	protected final RunningEnvironment application;
 	protected final android.app.NotificationManager notificationManager;
 	protected final Notification persistentNotification;
-//	protected final PendingIntent clearNotifications;
+	// protected final PendingIntent clearNotifications;
 	protected final Handler handler;
 
 	protected final Runnable startVibro;
@@ -70,10 +70,10 @@ public class NotificationManager implements OnInitializedListener,
 		handler = new Handler();
 		providers = new ArrayList<NotificationProvider<? extends NotificationItem>>();
 		startTime = System.currentTimeMillis();
-//		clearNotifications = PendingIntent.getActivity(application
-//				.getApplicationContext(), 0,
-//				createClearNotificationsIntent(application
-//						.getApplicationContext()), 0);
+		// clearNotifications = PendingIntent.getActivity(application
+		// .getApplicationContext(), 0,
+		// createClearNotificationsIntent(application
+		// .getApplicationContext()), 0);
 		stopVibro = new Runnable() {
 			@Override
 			public void run() {
@@ -171,7 +171,17 @@ public class NotificationManager implements OnInitializedListener,
 			}
 			Intent intent = top.getIntent();
 			if (intent == null) {
-				Log.d("NOTIFY", "intent == null exit!");
+				Log.d("NOTIFY",
+						"NotificationItem.getIntent() == null try get from NotificationProvider!");
+				try {
+					intent = provider.getIntent(top);
+				} catch (Exception e) {
+					intent = null;
+				}
+			}
+			if (intent == null) {
+				Log.d("NOTIFY",
+						"NotificationProvider.getIntent() == null exit!");
 				return;
 			}
 			Log.d("NOTIFY", "ticker:" + ticker);
@@ -190,7 +200,7 @@ public class NotificationManager implements OnInitializedListener,
 						SettingsManager.eventsVibro(), provider.getSound(),
 						provider.getStreamType());
 			}
-//			notification.deleteIntent = clearNotifications;
+			// notification.deleteIntent = clearNotifications;
 			Log.d("NOTIFY", "notify:" + top.getTitle() + ", " + top.getText());
 			notify(id, notification);
 		}
@@ -233,12 +243,10 @@ public class NotificationManager implements OnInitializedListener,
 				provider.clearNotifications();
 			}
 		}
-		RunningEnvironment.getInstance().runInBackground(new Runnable() {
-			@Override
-			public void run() {
-				NotificationTable.getInstance().clear();
-			}
-		});
+		for (OnClearNotificationsListener listener : RunningEnvironment
+				.getInstance().getManagers(OnClearNotificationsListener.class)) {
+			listener.clearNotifications();
+		}
 	}
 
 	@Override

@@ -72,6 +72,10 @@ public class Environment {
 		}
 	};
 
+	public Environment() {
+		this(null, null);
+	}
+
 	public Environment(String overlayManagersRes, String overlayTablesRes) {
 		this.overlayManagers = overlayManagersRes;
 		this.overlayTables = overlayTablesRes;
@@ -108,29 +112,45 @@ public class Environment {
 		Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 		mAppContext = getApplicationContext();
 
-		TypedArray managerClasses = getResources().obtainTypedArray(
-				getResId(overlayManagers));
-		for (int index = 0; index < managerClasses.length(); index++) {
-			String className = managerClasses.getString(index);
-			try {
-				Class.forName(className);
-			} catch (ClassNotFoundException e) {
-				throw new RuntimeException(e);
-			}
+		TypedArray managerClasses = null;
+		try {
+			managerClasses = getResources().obtainTypedArray(
+					getResId(overlayManagers));
+		} catch (Exception e) {
+			e.printStackTrace();
+			managerClasses = null;
 		}
-		managerClasses.recycle();
+		if (managerClasses != null) {
+			for (int index = 0; index < managerClasses.length(); index++) {
+				String className = managerClasses.getString(index);
+				try {
+					Class.forName(className);
+				} catch (ClassNotFoundException e) {
+					throw new RuntimeException(e);
+				}
+			}
+			managerClasses.recycle();
+		}
 
-		TypedArray tableClasses = getResources().obtainTypedArray(
-				getResId(overlayTables));
-		for (int index = 0; index < tableClasses.length(); index++) {
-			String className = tableClasses.getString(index);
-			try {
-				Class.forName(className);
-			} catch (ClassNotFoundException e) {
-				throw new RuntimeException(e);
-			}
+		TypedArray tableClasses = null;
+		try {
+			tableClasses = getResources().obtainTypedArray(
+					getResId(overlayTables));
+		} catch (Exception e) {
+			e.printStackTrace();
+			tableClasses = null;
 		}
-		tableClasses.recycle();
+		if (tableClasses != null) {
+			for (int index = 0; index < tableClasses.length(); index++) {
+				String className = tableClasses.getString(index);
+				try {
+					Class.forName(className);
+				} catch (ClassNotFoundException e) {
+					throw new RuntimeException(e);
+				}
+			}
+			tableClasses.recycle();
+		}
 	}
 
 	public boolean isInitialized() {
